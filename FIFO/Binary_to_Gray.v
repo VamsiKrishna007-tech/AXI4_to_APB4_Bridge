@@ -7,4 +7,3 @@ module binary_to_gray
 assign	gray <= (binary >> 1) ^ binary;
 
 endmodule
- 
