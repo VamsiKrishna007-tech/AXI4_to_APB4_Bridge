@@ -61,15 +61,17 @@ always @(posedge ACLK or negedge ARESETn) begin
         BRESP <= 2'b00;
     else if (state == WR_MRESP)
         BRESP <= wr_resp_2_axi;
+	else
+	    BRESP <= BRESP;
 end
 
 always @(*) begin
     if (state == WR_IRESP)
-        BID = AWID;
+        BID <= AWID;
     else if (state == WR_MRESP)
-        BID = wr_bid_2_axi;
+        BID <= wr_bid_2_axi;
     else
-        BID = 4'b0000;
+        BID <= 4'b0000;
 end
 
 assign BVALID = use_mwerr_resp ? ((state == WR_MRESP) && mstr_wr_2_axi_s) : (state == WR_IRESP);

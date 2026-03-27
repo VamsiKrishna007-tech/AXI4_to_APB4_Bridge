@@ -23,18 +23,18 @@ always @(posedge ACLK or negedge ARESETn) begin
 	RR_IDLE: begin
 	        if (!r_data_empty)
 			   next_state = RR_RESP_MC;
-			else if ( r_data_empty)
+			else
 			   next_state = RR_IDLE;
 			end
 	
 	RR_RESP_MC: begin                     // if Master is ready to accept the data then RREADY is high 
 	        if (!RREADY)
-			   next_state <= RR_RESP_MC;  // if Master is not ready, hold the data transaction and stay in the same state
-			else if (RREADY)
-			   next_state <= RR_IDLE;     // if Master is ready, complete the data transaction and return to IDLE state
+			   next_state = RR_RESP_MC;  // if Master is not ready, hold the data transaction and stay in the same state
+			else
+			   next_state = RR_IDLE;     // if Master is ready, complete the data transaction and return to IDLE state
 			end
 	
-	default: next_state <= RR_IDLE;
+	default: next_state = RR_IDLE;
 	endcase
 end
 

@@ -1,32 +1,33 @@
 // FIFO Top Block
 
 module fifo_top 
-( input sclk;
-  input s_rstn;
-  input wa_push;
-  input [48:0]wa_wdata;
-  output wa_full;
-  input wd_push;
-  input [37:0]wd_wdata;
-  output wd_full;
-  input ra_push;
-  input [48:0]ra_wdata;
-  output ra_full;
-  input rd_pop;
-  output [39:0] rd_rdata;
-  output rd_empty;
-  input m_rstn;
-  input mclk;
-  output [48:0] wa_rdata;
-  output wa_empty;
-  input wd_pop;
-  output [37:0] wd_rdata;
-  output wd_empty;
-  input ra_pop;
-  output [48:0]ra_rdata;
-  output ra_empty;
-  input rd_push;
-  input [39:0]rd_wdata;
+( input sclk,
+  input s_rstn,
+  input wa_push,
+  input [48:0]wa_wdata,
+  output wa_full,
+  input wd_push,
+  input wa_pop,
+  input [37:0]wd_wdata,
+  output wd_full,
+  input ra_push,
+  input [48:0]ra_wdata,
+  output ra_full,
+  input rd_pop,
+  output [39:0] rd_rdata,
+  output rd_empty,
+  input m_rstn,
+  input mclk,
+  output [48:0] wa_rdata,
+  output wa_empty,
+  input wd_pop,
+  output [37:0] wd_rdata,
+  output wd_empty,
+  input ra_pop,
+  output [48:0]ra_rdata,
+  output ra_empty,
+  input rd_push,
+  input [39:0]rd_wdata,
   output rd_full );
   
 // ############################### Write Address FIFO ##############################

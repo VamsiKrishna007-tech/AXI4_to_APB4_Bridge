@@ -3,7 +3,7 @@
 module app_addr_calc
 #( parameter AW = 32,
    parameter LW = 4,
-   parameter IW = 4);
+   parameter IW = 4)
 
 ( input [AW+IW+LW+7:0] waddr_ctrl_rdata,
   input waddr_fifo_empty,
@@ -109,25 +109,26 @@ always @(posedge PCLK or negedge PRESETn)
 	end
 	else begin
 	   if(w_count <= {1'b0, awlen}) begin   // Generate address untill all beats are done 
-	     if(!w_addr_ff) begin               // Internal FIFO not full
-		   w_pop <= 1'b0;                   // Diable pop
-           waddr_calc_progress <= 1'b1;     // Address calculation in progress
-		   w_addr_push <= 1'b1;             // Write enable for internal FIFO
-		   if(awburst == 2'b00) begin       // Burst type Fixed
-      		 write_next_address <= (write_start_address / w_no_of_bytes) *w_no_of_bytes;
-			 w_count <= w_count + 1'b1;     
- 		   end
-		   else begin                       // Burst type Increment
-		     write_next_address <= ((write_start_address / w_no_of_bytes) * w_no_of_bytes) + (w_count * w_no_of_bytes);
-             w_count <= w_count + 1'b1;     // Increament counter per beat
-           end
-	     else begin                         // If internal FIFO is full, hold everything
-		   w_pop <= w_pop;                  
-		   w_count <= w_count;
-		   waddr_calc_progress <= waddr_calc_progress;
-		   w_addr_push <= 1'b0;
-		 end
-		 end	
+	       if(!w_addr_ff) begin               // Internal FIFO not full
+		      w_pop <= 1'b0;                   // Diable pop
+              waddr_calc_progress <= 1'b1;     // Address calculation in progress
+		      w_addr_push <= 1'b1;             // Write enable for internal FIFO
+		      if(awburst == 2'b00) begin       // Burst type Fixed
+      		     write_next_address <= (write_start_address / w_no_of_bytes) *w_no_of_bytes;
+			     w_count <= w_count + 1'b1;     
+ 		      end
+		      else begin                       // Burst type Increment
+		         write_next_address <= ((write_start_address / w_no_of_bytes) * w_no_of_bytes) + (w_count * w_no_of_bytes);
+                 w_count <= w_count + 1'b1;     // Increament counter per beat
+              end
+		   end	  
+	       else begin                         // If internal FIFO is full, hold everything
+		      w_pop <= w_pop;                  
+		      w_count <= w_count;
+		      waddr_calc_progress <= waddr_calc_progress;
+		      w_addr_push <= 1'b0;
+		   end
+	   end	
        else begin
 	     if(waddr_fifo_pop) begin           // If new transaction available, pop next entry
 		   w_count <= 0;
@@ -156,27 +157,28 @@ always @(posedge PCLK or negedge PRESETn)
 	   r_pop <= 0;                // POP control reset
 	end
 	else begin
-	   if(r_count <= {1'b0, arlen}) begin
-	     if(!r_addr_ff) begin
-		   r_pop <= 1'b0;
-           raddr_calc_progress <= 1'b1;
-		   r_addr_push <= 1'b1;
-		   if(arburst == 2'b00) begin
-      		 read_next_address <= (read_start_address / r_no_of_bytes) *r_no_of_bytes;
-			 r_count <= r_count + 1'b1;
- 		   end
-		   else begin
-		     read_next_address <= ((read_start_address / r_no_of_bytes) * r_no_of_bytes) + (r_count * r_no_of_bytes);
-             r_count <= r_count + 1'b1;
-           end
-	     else begin
-		   r_pop <= r_pop;
-		   r_count <= r_count;
-		   raddr_calc_progress <= raddr_calc_progress;
-		   r_addr_push <= 1'b0;
-		 end
-		 end	
-       else begin
+	    if(r_count <= {1'b0, arlen}) begin
+	        if(!r_addr_ff) begin
+		      r_pop <= 1'b0;
+              raddr_calc_progress <= 1'b1;
+		      r_addr_push <= 1'b1;
+		      if(arburst == 2'b00) begin
+      		    read_next_address <= (read_start_address / r_no_of_bytes) *r_no_of_bytes;
+			    r_count <= r_count + 1'b1;
+ 		      end
+		      else begin
+		        read_next_address <= ((read_start_address / r_no_of_bytes) * r_no_of_bytes) + (r_count * r_no_of_bytes);
+                r_count <= r_count + 1'b1;
+              end
+			end  
+	        else begin
+		      r_pop <= r_pop;
+		      r_count <= r_count;
+		      raddr_calc_progress <= raddr_calc_progress;
+		      r_addr_push <= 1'b0;
+		    end
+	    end	
+        else begin
 	     if(raddr_fifo_pop) begin
 		   r_count <= 0;
 		   r_pop <= 1'b1;
@@ -187,7 +189,7 @@ always @(posedge PCLK or negedge PRESETn)
 		 end
 		 raddr_calc_progress <= 1'b0;
 		 r_addr_push <= 1'b0;
-	   end
+	    end
 	end   
 end
 

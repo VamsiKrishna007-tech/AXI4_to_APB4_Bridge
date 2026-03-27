@@ -1,7 +1,7 @@
 // dp_SRAM
 module dp_sram 
 #( parameter AW = 32,         // Depth = 2^AW
-   parameter DW = 32);        // Width = DW
+   parameter DW = 32)         // Width = DW
 ( input wclk,                 // Write Clock
   input rclk,                 // Read Clock
   input [AW-1:0]waddr,        // Write Pointer

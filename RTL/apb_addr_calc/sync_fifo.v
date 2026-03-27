@@ -5,10 +5,10 @@ module sync_fifo
   parameter DW =8 )
 ( input clk, 
   input rstn, 
-  input [AW-1:0]write_data,
+  input [DW-1:0]write_data,
   input push, 
   input pop, 
-  output reg [AW-1:0]read_data, 
+  output reg [DW-1:0]read_data, 
   output empty,
   output almost_full);
 // Internal Signals
@@ -20,9 +20,9 @@ integer i;
 
 // Write Operation
 always@ (posedge clk) begin
- if(rstn)                    // If rstn triggered memory is cleared and write pointer is rstn to 0
+ if(!rstn)                   // If rstn triggered memory is cleared and write pointer is rstn to 0
   begin
-   for(i=0;i<depth;i=i+1)
+   for(i = 0; i < (1<<AW); i = i + 1)
     memory[i] <= 0;    
     write_ptr <= 0;
   end
@@ -38,7 +38,7 @@ end
 // Read Operation
 always@ (posedge clk)
 begin
- if(rstn)                    // If rstn triggered output data is cleared and read pointer is rstn to 0
+ if(!rstn)                  // If rstn triggered output data is cleared and read pointer is rstn to 0
   begin
    read_data <= 0;
    read_ptr <= 0;

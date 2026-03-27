@@ -44,13 +44,14 @@ module apb_slave_selector
 	output [AW-1:0]paddr,
 	output [DW-1:0]pwdata,
 	output [(DW/8)-1:0]pstrb,
-//    output reg PSLVERR,
+        output reg PSLVERR,
 	output penable,
 	output reg decode_err,
 	output reg [10:0]pselx,
 	input [10:0]pslverr,
-//	output reg PREADY,
-	output reg [DW-1:0]PRDATA,
+	output reg PREADY,
+	output reg [DW-1:0]PRDATA
+     
 );
 
 // pwdata
@@ -66,7 +67,7 @@ assign pprot = (!decode_err)? PPROT : 3'b0;
 assign penable = (!decode_err)? PENABLE : 1'b0;
 
 //paddr
-assign paddr = (!decode_err)? PADDR : {(AW-1){1'b0}};
+assign paddr = (!decode_err)? PADDR : {(AW){1'b0}};
 
 // pwrite
 assign pwrite = (!decode_err)? PWRITE : 1'b0;
@@ -146,8 +147,8 @@ always @(*) begin
 	endcase
   end
   else begin
-    pselx <= 11'b0;
-	decode_err <= 1'b0;
+    pselx = 11'b0;
+	decode_err = 1'b0;
   end
 end
 

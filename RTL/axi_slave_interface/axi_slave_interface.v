@@ -27,8 +27,8 @@ input WLAST,
 input WVALID,
 output WREADY,
 // Write Response Channel (WR)
-output reg [IW-1:0] BID,
-output reg [1:0] BRESP,          // Indicates the status of write response.
+output [IW-1:0] BID,
+output [1:0] BRESP,          // Indicates the status of write response.
 output BVALID,            
 input BREADY,	
 // Read Address Channel (RA)
@@ -44,7 +44,7 @@ output ARREADY,
 input RREADY,
 output [IW-1:0] RID,
 output [DW-1:0] RDATA,
-output RRESP,
+output [1:0]RRESP,
 output RLAST,
 output RVALID,
 // Internal Signals
@@ -67,7 +67,8 @@ input [IW-1:0] wr_bid_2_axi,
 input mstr_wr_2_axi,
 input use_mwerr_resp
 );
-							
+wire [IW-1:0] BID_int; // Since BID & BRESP are output of axi slave and also output from
+wire [1:0] BRESP_int;  // write response FSM, the declation becomes illegal and an internal wire is needed				
 // ################################# Write Address Channel ######################################
 assign w_addr_ctrl = {AWPROT, AWBURST, AWSIZE, AWLEN, AWADDR, AWID};   // The write address information received from AXI master is Concatinated into one signal
 assign AWREADY = !w_addr_full;                                         // AWREADY is high if FIFO is not full
@@ -86,9 +87,12 @@ assign WREADY = !w_data_full;                                         // WREADY 
 assign w_data_wen = WVALID & WREADY;                                  // w_data_wen is high when WVALID & WREADY both signals are high (Handshake Logic)
 
 // ################################# Write Response FSM ######################################
-write_response_fsm F1(.ACLK(ACLK), .ARESETn(ARESETn),.BREADY(BREADY),.BVALID(BVALID),.use_mwerr_resp(use_mwerr_resp),.w_axi_addr_vld(w_axi_addr_vld), .AWID(AWID), .wr_bid_2_axi(wr_bid_2_axi), .wr_resp_2_axi(wr_resp_2_axi), .mstr_wr_2_axi(mstr_wr_2_axi), .BID(BID), .BRESP(BRESP));
-  
+write_response_fsm F1(.ACLK(ACLK), .ARESETn(ARESETn),.BREADY(BREADY),.BVALID(BVALID),.use_mwerr_resp(use_mwerr_resp),.w_axi_addr_vld(w_axi_addr_vld), .AWID(AWID), .wr_bid_2_axi(wr_bid_2_axi), .wr_resp_2_axi(wr_resp_2_axi), .mstr_wr_2_axi(mstr_wr_2_axi), .BID(BID_int), .BRESP(BRESP_int));
+
+assign BID   = BID_int;       
+assign BRESP = BRESP_int;
 // ################################ Read Address Channel #####################################
+assign r_axi_addr_vld = r_addr_wen;  // For Linting coverage
 assign r_addr_ctrl = {ARPROT, ARBURST, ARSIZE, ARLEN, ARADDR, ARID};  // The read address information received from AXI master is Concatinated into one signal
 assign ARREADY = !r_addr_full;                                        // ARREADY is high if FIFO is not full 
 assign r_addr_wen = ARVALID & ARREADY;                                // r_addr_wen is high when AWVALID & AWREADY both signals are high (Handshake Logic)

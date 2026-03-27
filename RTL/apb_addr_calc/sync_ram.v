@@ -2,7 +2,7 @@
 
 module sync_ram 
 #( parameter AW = 32,         // Depth = 2^AW
-   parameter DW = 32);        // Width = DW
+   parameter DW = 32)        // Width = DW
 ( input clk,                 // Clock
   input [AW-1:0]waddr,        // Write Pointer
   input [AW-1:0]raddr,        // Read Pointer

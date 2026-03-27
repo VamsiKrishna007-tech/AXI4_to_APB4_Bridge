@@ -84,6 +84,6 @@ end
 assign PRDATA = rd_en ? csr_use_mwerr_resp_wr_rd_ratio : 32'b0;
 
 assign use_mwerr_resp = csr_use_mwerr_resp_wr_rd_ratio[31];
-assign wr_rd_ratio = csr_use_mwerr_resp_wr_rd_ratio[2:0];
+assign wr_rd_ratio = csr_use_mwerr_resp_wr_rd_ratio[2:0];          // Decide the read-write ratio
 
 endmodule
